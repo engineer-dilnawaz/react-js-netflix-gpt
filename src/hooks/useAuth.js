@@ -7,6 +7,7 @@ import {
 import { AUTH } from "../utils/firebase-config";
 import { ShowToast, TOAST_TYPE } from "../utils/toast";
 import { useState } from "react";
+import { DEFAULT_ACCOUNT_PHOTO } from "../constants/app-constants";
 // import { useDispatch } from "react-redux";
 // import { updateProfileDetails } from "../store/slices/authSlice";
 
@@ -32,7 +33,7 @@ export const useAuth = () => {
   const handleProfileUpdate = async (name) => {
     const userUpdatingInfo = {
       displayName: name,
-      photoURL: "https://avatar.iran.liara.run/public",
+      photoURL: DEFAULT_ACCOUNT_PHOTO,
     };
     try {
       await updateProfile(AUTH.currentUser, userUpdatingInfo);

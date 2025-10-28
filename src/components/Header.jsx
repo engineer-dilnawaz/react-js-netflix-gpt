@@ -1,17 +1,38 @@
-import { useSelector } from "react-redux";
-import { Link } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router";
+import { APP_LOGO } from "../constants/app-constants";
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { AUTH } from "../utils/firebase-config";
+import { logIn, logout } from "../store/slices/authSlice";
 
 const Header = () => {
   const { loggedInUser } = useSelector((state) => state.auth);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(AUTH, (user) => {
+      if (user) {
+        const { displayName, email, uid, photoURL } = user;
+        if (displayName && email && uid && photoURL) {
+          dispatch(logIn({ displayName, email, uid, photoURL }));
+          navigate("/browse");
+        }
+      } else {
+        dispatch(logout());
+        navigate("/");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [dispatch, navigate]);
+
   return (
-    <div className="px-2 py-0.5 outline-0 z-10 w-full flex items-center justify-between ">
+    <div className="sticky top-0 left-0 right-0 px-2 py-0.5 outline-0 z-10 w-full flex items-center justify-between bg-linear-to-b bg-black text-white">
       <Link to={loggedInUser ? "/browse" : "/"}>
-        <img
-          src="https://help.nflxext.com/helpcenter/OneTrust/oneTrust_production_2025-08-26/consent/87b6a5c0-0104-4e96-a291-092c11350111/0198e689-25fa-7d64-bb49-0f7e75f898d2/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png"
-          alt="app logo"
-          className="w-40 bg-transparent"
-        />
+        <img src={APP_LOGO} alt="app logo" className="w-40 bg-transparent" />
       </Link>
       {loggedInUser && (
         <Link to="/profile">
