@@ -19,9 +19,8 @@ export const SignUp = z
       .regex(/[0-9]/, {
         error: "Password should include at least one numeric character",
       })
-      .regex(/[@!$%*?&]/, {
-        error:
-          "Passowrd should include at least one special characters(@!$%*?&)",
+      .regex(/[^A-Za-z0-9]/, {
+        message: "Password should include at least one special character",
       }),
     confirmPassword: z.string(),
   })

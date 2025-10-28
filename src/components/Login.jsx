@@ -1,15 +1,17 @@
-import { useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo, useRef, useState } from "react";
 
-import Header from "./Header";
-import Input from "./UI/Input";
 import { useForm } from "react-hook-form";
 import { SignIn, SignUp } from "../constants/authtentication-schema";
+import { useAuth } from "../hooks/useAuth";
+import { ShowToast, TOAST_TYPE } from "../utils/toast";
+import Input from "./UI/Input";
 
 const Login = () => {
+  const { handleSignUp, handleSignIn, LoggedInUser } = useAuth();
   const [isSignIn, setIsSignIn] = useState(true);
-
   const schema = useMemo(() => (isSignIn ? SignIn : SignUp), [isSignIn]);
+  const previouslyLoggedIn = useRef(null);
 
   const {
     register,
@@ -25,15 +27,29 @@ const Login = () => {
     reset();
   };
 
-  const handleOnSubmit = (data) => {
-    console.log("data", data);
+  const handleOnSubmit = async (data) => {
+    if (previouslyLoggedIn.current === JSON.stringify(data)) {
+      return ShowToast(
+        "Invalid credentials please check your email or password",
+        TOAST_TYPE.INFO
+      );
+    }
+    previouslyLoggedIn.current = JSON.stringify(data);
+    if (!isSignIn) {
+      await handleSignUp(data.name, data.email, data.password);
+      previouslyLoggedIn.current = null;
+      reset();
+    } else {
+      await handleSignIn(data.email, data.password);
+      previouslyLoggedIn.current = null;
+      reset();
+    }
   };
 
   return (
     <div className="h-full">
-      <Header />
       <div className="relative h-screen flex flex-col justify-center items-center bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/9ba9f0e2-b246-47f4-bd1f-3e84c23a5db8/web/PK-en-20251020-TRIFECTA-perspective_38affad5-942d-4214-9a8d-e193c7261c53_large.jpg')] bg-cover bg-center before:content-[''] before:absolute before:inset-0 before:bg-black/55">
-        <div className="w-4/12 bg-black/65  p-4 rounded-sm z-10">
+        <div className="lg:w-4/12 w-8/12 bg-black/65  p-4 rounded-sm z-10">
           <h1 className="font-bold text-3xl text-white mb-4">
             {isSignIn ? "Sign In" : "Sign Up"}
           </h1>
