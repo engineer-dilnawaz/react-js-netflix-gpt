@@ -11,16 +11,16 @@ const HorizontalList = ({ data }) => {
 
   return (
     <div
-      className="aspect-square bg-red-600 h-48 relative cursor-pointer"
+      className="aspect-square bg-black h-48 relative cursor-pointer"
       onClick={handleUpdateMainMovie}
     >
       <img
-        src={API_CONSTANTS.posters.original + data?.backdrop_path}
-        className="h-full w-full object-cover"
+        src={API_CONSTANTS.posters.original + data?.poster_path}
+        className="h-full"
       />
-      <div className="absolute bottom-0 left-0 right-0 text-white bg-linear-to-l from-black to-black/30 line-clamp-1 ">
+      {/* <div className="absolute bottom-0 left-0 right-0 text-white bg-linear-to-l from-black to-black/30 line-clamp-1 ">
         <h1 className="font-semibold text-lg text-white">{data?.title}</h1>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -12,6 +12,8 @@ export const API_CONSTANTS = {
     small: "https://image.tmdb.org/t/p/w200",
   },
   youtube_base_url: "https://www.youtube.com/watch?v=",
+  gpt_api_key: import.meta.env.VITE_GPT_API_KEY,
+  google_studio_api_key: import.meta.env.VITE_GOOGLE_STUDIO_API_KEY,
 };
 
 export const API_ENDPOINTS = {

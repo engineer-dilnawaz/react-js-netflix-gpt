@@ -7,6 +7,7 @@ import { store } from "./store/store";
 import Login from "./components/Login";
 import Browse from "./components/Browse";
 import Profile from "./components/Profile";
+import GPTSearch from "./components/GPTSearch";
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -27,6 +28,10 @@ function App() {
     {
       path: "/profile",
       element: <Profile />,
+    },
+    {
+      path: "/gpt-search",
+      element: <GPTSearch />,
     },
   ]);
   return (
